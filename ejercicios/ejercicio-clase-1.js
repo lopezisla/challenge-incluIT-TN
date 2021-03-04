@@ -15,58 +15,67 @@ const students = [
     score: 2,
   },
 ];
-console.log("El array students original es:");
-console.log(students);
-console.log("---------------------------------------------------------");
-console.log("El array students ordenado por score de mayor a menor es:");
-students.sort((a, b) => b.score - a.score);
-console.log(students);
-console.log(
-  "------------------------------------------------------------------"
-);
-console.log(
-  "El array students con propiedades name y lastname capitalizadas es:"
-);
+
+const upperCaseFirstLetter = (name) => name[0].toUpperCase();
+
+const capitalizeString = string => {
+  const stringFirstLetter = upperCaseFirstLetter(string);
+  const stringLowerCase = string.toLowerCase().slice(1);
+  return stringFirstLetter + stringLowerCase;
+}
+
 const studentsCapitalized = students.map((student) => {
-  let name = student.name.toLowerCase();
-  let firstletter = name[0].toUpperCase();
-  name = name.slice(1);
-  name = firstletter + name;
-  let lastname = student.lastname.toLowerCase();
-  firstletter = lastname[0].toUpperCase();
-  lastname = lastname.slice(1);
-  lastname = firstletter + lastname;
+  const name = capitalizeString(student.name);
+  const lastname = capitalizeString(student.lastname);
   const studentCap = {
-    name: name,
-    lastname: lastname,
+    name,
+    lastname,
     score: student.score,
   };
   return studentCap;
 });
-console.log(studentsCapitalized);
-console.log(
-    "------------------------------------------------------------------"
-  );
-  console.log(
-    "El listado de estudiantes aprobados y no aprobados con .map() es:"
-  );
 
-const studentsApproved = function (students, minNote) {
-   
+studentsCapitalized.sort((a, b) => b.score - a.score);
+
+const mapApprovedStudents = (students, minNote) => {
   students.map((student) => {
-    if (student.score >= minNote) {
-      console.log(
-        `El estudiante ${student.name} ${student.lastname} está aprobado con ${student.score}.`
-      );
-    } else {
-      console.log(
-        `El estudiante ${student.name} ${student.lastname} no alcanzó la nota mínima ${minNote}, su nota es ${student.score}.`
-      );
-    }
+    message(student, minNote);
   });
 };
 
-studentsApproved(studentsCapitalized, 4);
-console.log(
-    "------------------------------------------------------------------"
-  );
+const forEachApprovedStudents = (students, minNote) => {
+  students.forEach((student) => {
+    message(student, minNote);
+  });
+};
+
+const forOfApprovedStudents = (students, minNote) => {
+  for (const student of students) {
+    message(student, minNote);
+  }
+};
+
+const message = ({ name, lastname, score }, minNote) => {
+  score >= minNote
+    ? console.log(
+        `El estudiante ${name} ${lastname} está aprobado con ${score}.`
+      )
+    : console.log(
+        `El estudiante ${name} ${lastname} no alcanzó la nota mínima ${minNote}, su nota es ${score}.`
+      );
+};
+
+setTimeout(() => {
+  console.log("-----------------------MAP------------------------------");
+  mapApprovedStudents(studentsCapitalized, 4);
+}, 1000);
+
+setTimeout(() => {
+  console.log("----------------------FOREACH---------------------------");
+  forEachApprovedStudents(studentsCapitalized, 6);
+}, 2000);
+
+setTimeout(() => {
+  console.log("----------------------FOR-OF----------------------------");
+  forOfApprovedStudents(studentsCapitalized, 6);
+}, 3000);
