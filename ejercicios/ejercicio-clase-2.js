@@ -58,45 +58,44 @@ setTimeout(() => {
   console.log("=============================================================");
 }, 4000);
 
-const promiseMap = new Promise((resolve, reject) => {
-  const result = mapApprovedStudents(studentsCapitalized, 4);
-  if (Array.isArray(result)) {
-    resolve(result);
-  } else {
-    reject("Algo falló");
-  }
-});
+const checkArrayAndSendResponse = (array, resolve, reject) => {
+  if (Array.isArray(array)) return resolve(array);
+  return reject("error");
+};
 
-const promiseForEach = new Promise((resolve, reject) => {
-  const result = forEachApprovedStudents(studentsCapitalized, 6);
-  if (Array.isArray(result)) {
-    resolve(result);
-  } else {
-    reject("Algo falló");
-  }
-});
+const promiseMap = () => {
+  return new Promise((resolve, reject) => {
+    const result = mapApprovedStudents(studentsCapitalized, 4);
+    checkArrayAndSendResponse(result, resolve, reject);
+  });
+};
 
-const promiseForOf = new Promise((resolve, reject) => {
-  const result = forOfApprovedStudents(studentsCapitalized, 8);
-  if (Array.isArray(result)) {
-    resolve(result);
-  } else {
-    reject("Algo falló");
-  }
-});
+const promiseForEach = () => {
+  return new Promise((resolve, reject) => {
+    const result = forEachApprovedStudents(studentsCapitalized, 4);
+    checkArrayAndSendResponse(result, resolve, reject);
+  });
+};
+
+const promiseForOf = () => {
+  return new Promise((resolve, reject) => {
+    const result = forOfApprovedStudents(studentsCapitalized, 4);
+    checkArrayAndSendResponse(result, resolve, reject);
+  });
+};
 
 setTimeout(() => {
-  promiseMap
-    .then((result) => {
+  promiseMap()
+    .then((studentsNotes) => {
       console.log("-----------------------PROMISE--------------------------");
-      console.log(result);
+      console.log(studentsNotes);
     })
     .catch((err) => console.log(err));
 }, 1000);
 
-Promise.all([promiseMap, promiseForEach, promiseForOf])
-  .then((result) => {
+Promise.all([promiseMap(), promiseForEach(), promiseForOf()])
+  .then((studentsNote) => {
     console.log("-----------------------PROMISE-ALL------------------------");
-    console.log(result);
+    console.log(studentsNote);
   })
   .catch((err) => console.log(err));
